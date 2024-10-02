@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D3.js | Class 1</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
+    <style>
+        /* Basic styles for the SVG */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        th, td {
+        padding: 5px;
+        text-align: left;
+        }
+
+        td.bold {
+            color: red;
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <!-- Table to select (DO NOT TOUCH THIS) -->
+     <table>
+        <thead>
+            <th>Player</th>
+            <th>Points per game</th>
+            <th>Total points</th>
+        </thead>
+        <tbody id="table_body"></tbody>
+     </table>
+
+
+    <script> 
+
+
+        const container = d3.select('thead')
+
+        //Import the csv
+        //convert the points from strings to numbers
+        // sort players by points per game, with highest on top
+        // add data to table body 
+
+        d3.csv('nba_data.csv').then(function(data){
+            
+            data.forEach(d => {
+                d.ppg = +d['points_per_game'];
+                d.tp = +d['career_points'];
+            });
+
+            data.sort((a, b) => b.ppg - a.ppg);
+
+            const thead = d3.select('thead');
+            const tbody = d3.select('#table_body');
+
+            const rows = tbody.selectAll('tr')
+                .data(data)
+                .enter()
+                .append('tr');
+
+            rows.selectAll('td')
+                .data(d => Object.values(d)) 
+                .enter()
+                .append('td')
+                .style('background-color', 'pink')
+                .html(d => d);
+        });
+
+                //if player is active (Lebron James), color that line
+
+    </script>
+</body>
+</html>
+
+<!-- const thead = document.getElementsByTagName('thead')[0]; 
+const tbody = document.getElementsByTagName('tbody')[0];
+const cells = thead.getElementsByTagName('th');
+
+data.forEach(d => {
+    const row = tbody.insertRow(); // new row for each data entry
+    Array.from(cells).forEach(cell => {
+        const newCell = row.insertCell(); // new cell in the row
+        newCell.style.backgroundColor = 'pink';
+        newCell.innerHTML = d[cell.innerText.toLowerCase()]; // Assuming the th text matches the property names
+    });
+}); -->
